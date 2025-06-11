@@ -4,7 +4,15 @@ from datetime import datetime, time
 from django.conf import settings
 
 
+def get_all_unique_genres():
+    genre_map = {}  
 
+    for movie in Movies.objects.exclude(genres__isnull=True).exclude(genres=[]):
+        for genre in movie.genres:
+            genre_map[genre['id']] = genre['name']
+
+    genre_list = [{"id": k, "name": v} for k, v in genre_map.items()]
+    return genre_list
 
 class MovieListSerializer(serializers.ModelSerializer):
 
