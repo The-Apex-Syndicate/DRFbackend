@@ -25,6 +25,7 @@ RUN pip install --upgrade pip \
 COPY . .
 
 # Collect static files
+ENV DJANGO_SETTINGS_MODULE=moveibackend.settings.prod
 RUN python manage.py collectstatic --noinput
 
 # Create non-root user
@@ -35,4 +36,4 @@ USER appuser
 EXPOSE 8000
 
 # Run Gunicorn
-CMD ["DJANGO_SETTINGS_MODULE=your_project.settings.prod" ,"gunicorn", "moveibackend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=2"]
+CMD ["DJANGO_SETTINGS_MODULE=moveibackend.settings.prod" ,"gunicorn", "moveibackend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=2"]
