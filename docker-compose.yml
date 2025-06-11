@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  # movie-backend:
+  #   build:
+  #     context: .
+  #     dockerfile: build/Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./media:/moveibackend/media # mount local media dir into container
+  #   environment:
+  #     - DEBUG=1
+  #     - SERVE_MEDIA=true
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./.docker-data1:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin

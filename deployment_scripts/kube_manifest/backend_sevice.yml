@@ -1,0 +1,13 @@
+# backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-backend-service
+  namespace: movie-app
+spec:
+  selector:
+    app: movie-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

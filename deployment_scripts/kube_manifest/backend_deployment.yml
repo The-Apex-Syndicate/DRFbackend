@@ -1,0 +1,33 @@
+# backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-backend
+  namespace: movie-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movie-backend
+  template:
+    metadata:
+      labels:
+        app: movie-backend
+    spec:
+      containers:
+        - name: movie-backend
+          image: k8-movie-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: host.docker.internal
+            - name: DB_NAME
+              value: postgres
+            - name: DB_USER
+              value: sathish
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DJANGO_SETTINGS_MODULE
+              value: moveibackend.settings

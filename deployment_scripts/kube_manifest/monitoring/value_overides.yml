@@ -1,0 +1,15 @@
+grafana:
+  grafana.ini:
+    server:
+      root_url: "%(protocol)s://%(domain)s/grafana"
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    paths:
+      - /grafana(/|$)(.*)
+    pathType: ImplementationSpecific
+    hosts:
+      - movie.app.local
