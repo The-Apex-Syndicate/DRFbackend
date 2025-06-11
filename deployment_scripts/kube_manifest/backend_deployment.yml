@@ -29,6 +29,8 @@ spec:
             - name: DB_PASSWORD
               value: postgres
             - name: DJANGO_SETTINGS_MODULE
-              value: moveibackend.settings
+              value: moveibackend.settings.prod
+            - name: DJANGO_ENV
+              value: prod
       imagePullSecrets:
         - name: regcred

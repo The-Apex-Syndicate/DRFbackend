@@ -4,7 +4,8 @@ FROM python:3.11-slim as base
 # Environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=moveibackend.settings.prod
+    DJANGO_SETTINGS_MODULE=moveibackend.settings.prod \
+    DJANGO_ENV=prod
 
 # Set working directory
 WORKDIR /moveibackend
