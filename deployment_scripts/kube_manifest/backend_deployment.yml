@@ -5,7 +5,7 @@ metadata:
   name: movie-backend
   namespace: movie-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: movie-backend
@@ -30,3 +30,5 @@ spec:
               value: postgres
             - name: DJANGO_SETTINGS_MODULE
               value: moveibackend.settings
+      imagePullSecrets:
+        - name: regcred
