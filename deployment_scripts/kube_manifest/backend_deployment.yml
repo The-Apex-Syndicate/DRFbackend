@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: movie-backend
-          image: k8-movie-backend:latest
-          imagePullPolicy: Never
+          image: sathishselvan/movie-backend:latest
           ports:
             - containerPort: 8000
           env:
