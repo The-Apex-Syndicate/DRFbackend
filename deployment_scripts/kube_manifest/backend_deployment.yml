@@ -32,5 +32,12 @@ spec:
               value: moveibackend.settings.prod
             - name: DJANGO_ENV
               value: prod
+          volumeMounts:
+            - name: media-volume
+              mountPath: /moveibackend/media
       imagePullSecrets:
         - name: regcred
+      volumes:
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: media-pvc
