@@ -18,6 +18,13 @@ spec:
                 name: movie-backend-service
                 port:
                   number: 80
+          - path: /media/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
           - path: /api/
             pathType: Prefix
             backend:
