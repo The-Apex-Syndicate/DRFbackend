@@ -11,19 +11,15 @@ def dump_movie_data():
         spoken_languages_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/spoken_languages.csv') 
         movies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movies_metadata.csv') 
 
-
         genre_mapping = {}  
         production_companies_mapping = {}
         production_countries_mapping = {}
         spoken_languages_mapping = {}
-
         movies_df = movies_df
         genres_df = genres_df
         production_companies_df = production_companies_df
         production_countries_df = production_countries_df
         spoken_languages_df = spoken_languages_df
-
-        
         for _, row in genres_df.iterrows():
             with transaction.atomic():
                 genre, created = Genre.objects.get_or_create(
@@ -145,11 +141,8 @@ def dump_cast_data():
         actors_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/actors.csv') 
 
         actors_mapping = {}  
-
         movie_cast_df = movie_cast_df
         actors_df = actors_df
-
-        
         for _, row in actors_df.iterrows():
             with transaction.atomic():
                 actors, created = Actor.objects.get_or_create(
@@ -164,19 +157,31 @@ def dump_cast_data():
 
         for _, row in movie_cast_df.iterrows():
             with transaction.atomic():
-                actor_instance = Actor.objects.get(id = row['actor_id'])
-                movie_instance = Movie.objects.get(id=row['movie_id'])
-                if movie_instance and actor_instance:
-                    movie_cast, created = MovieActorMap.objects.get_or_create(
-                        actor = actor_instance,
-                        movie = movie_instance,
-                        defaults={
-                                'character_name': row['character_name'],
-                                'profile_path' : row['profile_path']
-                                }
-                    )
-                    if created:
-                        print(f"Created MovieActorMap: {movie_cast.id}")
+                try:
+                    actor_instance = None
+                    movie_instance = None
+                    try:
+                        actor_instance = Actor.objects.get(id = row['actor_id'])
+                    except Actor.DoesNotExist:
+                        print("actor doesn't exists")
+                    try:
+                        movie_instance = Movie.objects.get(id=row['movie_id'])
+                    except Movie.DoesNotExist:
+                        print("movie doesn't exists")
+
+                    if movie_instance and actor_instance:
+                        movie_cast, created = MovieActorMap.objects.get_or_create(
+                            actor = actor_instance,
+                            movie = movie_instance,
+                            defaults={
+                                    'character_name': row['character_name'],
+                                    'profile_path' : row['profile_path']
+                                    }
+                        )
+                        if created:
+                            print(f"Created MovieActorMap: {movie_cast.id}")
+                except Exception as e:
+                    print(f"Error processing movieActorMap : {str(e)}")
 
 
     except Exception as e:
