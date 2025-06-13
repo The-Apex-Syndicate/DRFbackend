@@ -1,26 +1,27 @@
 import pandas as pd
 from django.core.management.base import BaseCommand
-from movies.models import Movie, Genre, ProductionCompany, ProductionCountry, SpokenLanguage
+from movies.models import Movie, Genre, ProductionCompany, ProductionCountry, SpokenLanguage, Actor, MovieActorMap
 from django.db import transaction
 
-def dump_data():
+def dump_movie_data():
     try:
-        movies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movies_metadata.csv') 
         genres_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/genres.csv') 
         production_companies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/production_companies.csv') 
         production_countries_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/production_countries.csv') 
         spoken_languages_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/spoken_languages.csv') 
+        movies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movies_metadata.csv') 
+
 
         genre_mapping = {}  
         production_companies_mapping = {}
         production_countries_mapping = {}
         spoken_languages_mapping = {}
 
-        movies_df = movies_df.head(200)
-        genres_df = genres_df.head(200)
-        production_companies_df = production_companies_df.head(200)
-        production_countries_df = production_countries_df.head(200)
-        spoken_languages_df = spoken_languages_df.head(200)
+        movies_df = movies_df
+        genres_df = genres_df
+        production_companies_df = production_companies_df
+        production_countries_df = production_countries_df
+        spoken_languages_df = spoken_languages_df
 
         
         for _, row in genres_df.iterrows():
@@ -84,16 +85,29 @@ def dump_data():
                         title = row['title'],
                         video = row['video'],
                         vote_average = row['vote_average'],
-                        vote_count = row['vote_count']
+                        vote_count = row['vote_count'],
+                        rating=row['rating']
                     )
                 except Exception as e:
                     # print("error here")
                     print(f"Error here processing movie {row['title']}: {str(e)}")
                 try:
-                    genre_ids = row['genres'].split(',')
-                    production_company_ids =  row['production_companies'].split(',')
-                    production_country_ids = row['production_countries'].split(',')
-                    spoken_language_ids = row['spoken_languages'].split(',')
+                    try:
+                        genre_ids = row['genres'].split(',')
+                    except:
+                        print(row['genres'])
+                    try:
+                        production_company_ids =  row['production_companies'].split(',')
+                    except:
+                        print(row['production_companies'])
+                    try:
+                        production_country_ids = row['production_countries'].split(',')
+                    except:
+                        print(row['production_countries'])
+                    try:
+                        spoken_language_ids = row['spoken_languages'].split(',')
+                    except:
+                        print(row['spoken_languages'])
                     if genre_ids:
                         for genre_id in genre_ids:
                             if int(genre_id) in genre_mapping:
@@ -124,8 +138,52 @@ def dump_data():
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
+def dump_cast_data():
+    try:
+        movie_cast_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movie_cast_map.csv') 
+        actors_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/actors.csv') 
+
+        actors_mapping = {}  
+
+        movie_cast_df = movie_cast_df
+        actors_df = actors_df
+
+        
+        for _, row in actors_df.iterrows():
+            with transaction.atomic():
+                actors, created = Actor.objects.get_or_create(
+                    id=row['id'],
+                    defaults={'name': row['name'], 
+                              'gender': row['gender']
+                              }
+                )
+                actors_mapping[row['id']] = actors
+                if created:
+                    print(f"Created actors: {actors.name}")
+
+        for _, row in movie_cast_df.iterrows():
+            with transaction.atomic():
+                actor_instance = Actor.objects.get(id = row['actor_id'])
+                movie_instance = Movie.objects.get(id=row['movie_id'])
+                if movie_instance and actor_instance:
+                    movie_cast, created = MovieActorMap.objects.get_or_create(
+                        actor = actor_instance,
+                        movie = movie_instance,
+                        defaults={
+                                'character_name': row['character_name'],
+                                'profile_path' : row['profile_path']
+                                }
+                    )
+                    if created:
+                        print(f"Created MovieActorMap: {movie_cast.id}")
+
+
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
 class Command(BaseCommand):
     help = 'Import movies and genres from CSV files'
 
     def handle(self, *args, **kwargs):
-        dump_data()
+        dump_movie_data()
+        dump_cast_data()
