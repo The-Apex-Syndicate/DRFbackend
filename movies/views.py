@@ -1,57 +1,40 @@
 from django.shortcuts import render
-from rest_framework import generics, filters
-from .serializers import MovieListSerializer, MovieDetailSerializer, GenreSerializer, get_all_unique_genres
-from .models import Movies
+from rest_framework import generics, filters, viewsets
+from .serializers import GenreSerializer, MovieListSerializer,  MovieDetailSerializer, MovieActorSerializer
+from .models import Movie, Genre, MovieActorMap
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import MovieFilter
 
 
-# Create your views here.
 
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
 
-class MoviePagination(PageNumberPagination):
-    page_size = 25  # customize page size here
-    page_size_query_param = 'page_size'  # allow client to override with ?page_size=xyz
-    max_page_size = 50
-
-class MovieListView(generics.ListAPIView):
-    serializer_class = MovieListSerializer
-    pagination_class = MoviePagination
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['release_date', 'title', 'popularity']
-    ordering = ['id']
-
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return MovieListSerializer
+        return MovieDetailSerializer
+    
     def get_queryset(self):
-        query = self.request.GET.get('search', '')
-        if query:
-            vector = (
-                SearchVector('title', weight='A') 
-                # SearchVector('overview', weight='B')
-            )
-            search_query = SearchQuery(query)
-            return Movies.objects.annotate(
-                rank=SearchRank(vector, search_query)
-            ).filter(rank__gt=0).order_by('-rank')
-        return Movies.objects.all()
+        queryset = Movie.objects.all().prefetch_related(
+            'genres', 'production_companies', 'production_countries', 'spoken_languages'
+            ).order_by('-release_date')
+        if self.action == 'retrieve':
+            queryset = queryset.prefetch_related('cast','cast__actor')
+        return queryset
 
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MovieFilter
+   
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
 
-
-
-class MovieDetailView(generics.RetrieveAPIView):
-    queryset = Movies.objects.all()
-    serializer_class = MovieDetailSerializer
-
-
-
-
-class CategoryListView(generics.GenericAPIView):
-
-    queryset = Movies.objects.all()
-    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-
-    def get(self, request):
-        genres = get_all_unique_genres()
-        return Response(genres)
+class MovieActorMapViewSet(viewsets.ModelViewSet):
+    queryset = MovieActorMap.objects.all()
+    serializer_class = MovieActorSerializer
