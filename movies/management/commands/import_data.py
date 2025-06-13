@@ -69,45 +69,46 @@ def dump_movie_data():
         for _, row in movies_df.iterrows():
             with transaction.atomic():
                 try:
-                    movie = Movie.objects.create(
-                        id=int(row['id']),
-                        adult = row['adult'],
-                        original_language = row['original_language'],
-                        original_title = row['original_title'],
-                        overview = row['overview'],
-                        popularity = row['popularity'],
-                        poster_path = row['poster_path'],
-                        release_date = row['release_date'],
-                        revenue = row['revenue'],
-                        runtime = row['runtime'],
-                        status = row['status'],
-                        tagline = row['tagline'],
-                        title = row['title'],
-                        video = row['video'],
-                        vote_average = row['vote_average'],
-                        vote_count = row['vote_count'],
-                        rating=row['rating']
-                    )
+                    fields = {
+                        'id': int(row['id']),
+                        'adult': row['adult'],
+                        'original_language': row['original_language'],
+                        'original_title': row['original_title'],
+                        'overview': row['overview'],
+                        'popularity': row['popularity'],
+                        'poster_path': row['poster_path'],
+                        'revenue': row['revenue'],
+                        'runtime': row['runtime'],
+                        'status': row['status'],
+                        'tagline': row['tagline'],
+                        'title': row['title'],
+                        'video': row['video'],
+                        'vote_average': row['vote_average'],
+                        'vote_count': row['vote_count'],
+                        'rating': row['rating'],
+                    }
+                    release_date = row['release_date']
+                    if isinstance(release_date, str) and release_date.strip():
+                        fields['release_date'] = release_date 
+
+                    movie = Movie.objects.create(**fields)
+                        
                 except Exception as e:
                     # print("error here")
                     print(f"Error here processing movie {row['title']}: {str(e)}")
                 try:
-                    try:
+                    if isinstance(row['genres'], str):
                         genre_ids = row['genres'].split(',')
-                    except:
-                        print(row['genres'])
-                    try:
+
+                    if isinstance(row['production_companies'], str):
                         production_company_ids =  row['production_companies'].split(',')
-                    except:
-                        print(row['production_companies'])
-                    try:
+
+                    if isinstance(row['production_countries'], str):
                         production_country_ids = row['production_countries'].split(',')
-                    except:
-                        print(row['production_countries'])
-                    try:
+
+                    if isinstance(row['spoken_languages'], str):
                         spoken_language_ids = row['spoken_languages'].split(',')
-                    except:
-                        print(row['spoken_languages'])
+
                     if genre_ids:
                         for genre_id in genre_ids:
                             if int(genre_id) in genre_mapping:
