@@ -1,6 +1,33 @@
+from datetime import date
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if 'dob' not in extra_fields:
+            extra_fields['dob'] = date.today() 
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+                                
 class ProductionCompany(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(blank=True, null=True, max_length=300)
@@ -55,8 +82,8 @@ class Movie(models.Model):
     overview = models.TextField(blank=True, null=True)
     popularity = models.FloatField(blank=True, null=True)
     poster_path = models.CharField(blank=True, null=True, max_length=200)
-    production_companies = models.ManyToManyField(ProductionCompany, related_name='movie_production_company', blank=True)
-    production_countries = models.ManyToManyField(ProductionCountry, related_name='movie_production_country', blank=True)
+    production_companies = models.ManyToManyField(ProductionCompany, related_name='movie_production_companies', blank=True)
+    production_countries = models.ManyToManyField(ProductionCountry, related_name='movie_production_countries', blank=True)
     release_date = models.DateField(blank=True, null=True)
     revenue = models.FloatField(blank=True, null=True)
     runtime = models.FloatField(blank=True, null=True)
@@ -85,3 +112,21 @@ class MovieActorMap(models.Model):
     class Meta:
         unique_together = ['movie', 'actor', 'character_name']
     
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True, blank=False)
+    dob = models.DateField(null=False, blank=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+
+class WishList(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username}_{self.movie.title}'
+    class Meta:
+        unique_together = ['user', 'movie']
