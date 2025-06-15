@@ -111,3 +111,13 @@ class WishListViewSet(viewsets.ModelViewSet):
             )
 
   
+class MovieDetailsListById(APIView):
+    def get(self, request):
+        movie_ids = request.query_params.getlist('id')
+        if not movie_ids:
+            return Response({"detail": "No movie id provided."}, status=status.HTTP_400_BAD_REQUEST)
+        movies = Movie.objects.filter(id__in=movie_ids)
+        if not movies.exists():
+            return Response({"detail": "No movies found"}, status=status.HTTP_404_NOT_FOUND)        
+        serializer = MovieListSerializer(movies, many=True)        
+        return Response(serializer.data, status=status.HTTP_200_OK)
