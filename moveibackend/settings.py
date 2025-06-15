@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--c46!$%5_ciy4fc+o(u=5byx195*etyu300)q2q&!oj1*yf238'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure--c46!$%5_ciy4fc+o(u=5byx195*etyu300)q2q&!oj1*yf238')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -92,7 +94,6 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ',
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20
 }
@@ -126,6 +127,17 @@ DATABASES = {
         'PORT': '5433',
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": config("SQL_ENGINE"),
+#         "NAME": config("SQL_DATABASE"),
+#         "USER": config("SQL_USER"),
+#         "PASSWORD": config("SQL_PASSWORD"),
+#         "HOST": config("SQL_HOST"),
+#         "PORT": config("SQL_PORT"),
+#     }
+# }
 
 
 

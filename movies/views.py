@@ -15,9 +15,8 @@ from django.db.models import F
 from rest_framework.views import APIView
 import random
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from knox.models import AuthToken
-from rest_framework.decorators import api_view
+from knox.auth import TokenAuthentication
 
 
 class SignUpView(generics.GenericAPIView):
@@ -88,6 +87,7 @@ class RandomMovieView(APIView):
         return Response(serialized_movies.data)
 
 class WishListViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
     queryset = WishList.objects.all().select_related('movie', 'user')
     serializer_class = WishListSerializer
     
