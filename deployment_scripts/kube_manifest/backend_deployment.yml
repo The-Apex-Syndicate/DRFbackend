@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: movie-backend
-          image: sathishselvan/movie-backend:v0.6
+          image: sathishselvan/movie-backend:v0.7
           ports:
             - containerPort: 8000
           env:
