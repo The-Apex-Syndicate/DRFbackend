@@ -5,7 +5,7 @@ metadata:
   name: movie-ingress
   namespace: movie-app
   annotations:
-    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   rules:
     - host: movie.app.local
@@ -39,26 +39,71 @@ spec:
                 name: movie-recommend-service
                 port:
                   number: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: grafana-ingress
-  namespace: monitoring
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-spec:
-  rules:
-    - host: movie.app.local
-      http:
+    
+    
+    - http:
         paths:
-          - path: /grafana(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /static/
+            pathType: Prefix
             backend:
               service:
-                name: kube-prometheus-grafana
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /media/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /ai/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-recommend-service
                 port:
                   number: 80
 
-          
+    
+
+    - host: pf72lmlw-8080.inc1.devtunnels.ms
+      http:
+        paths:
+          - path: /static/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /media/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-backend-service
+                port:
+                  number: 80
+          - path: /ai/
+            pathType: Prefix
+            backend:
+              service:
+                name: movie-recommend-service
+                port:
+                  number: 80
+
+       
