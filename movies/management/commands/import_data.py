@@ -5,11 +5,11 @@ from django.db import transaction
 
 def dump_movie_data():
     try:
-        genres_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/genres.csv') 
-        production_companies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/production_companies.csv') 
-        production_countries_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/production_countries.csv') 
-        spoken_languages_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/spoken_languages.csv') 
-        movies_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movies_metadata.csv') 
+        genres_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/genres.csv') 
+        production_companies_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/production_companies.csv') 
+        production_countries_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/production_countries.csv') 
+        spoken_languages_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/spoken_languages.csv') 
+        movies_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/movies_metadata.csv') 
 
         genre_mapping = {}  
         production_companies_mapping = {}
@@ -137,8 +137,8 @@ def dump_movie_data():
 
 def dump_cast_data():
     try:
-        movie_cast_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/movie_cast_map.csv') 
-        actors_df = pd.read_csv('/Users/bharath/Documents/Hack/Hackathon/processed/actors.csv') 
+        movie_cast_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/movie_cast_map.csv') 
+        actors_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/actors.csv') 
 
         actors_mapping = {}  
         movie_cast_df = movie_cast_df
@@ -189,7 +189,7 @@ def dump_cast_data():
 
 
 def update_video_url():
-    df = pd.read_json('/Users/bharath/Documents/Hack/Hackathon/processed/trailer.json')
+    df = pd.read_json('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/trailer.json')
     df.dropna()
     for _, row in df.iterrows():
             with transaction.atomic():
