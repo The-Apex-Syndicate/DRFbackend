@@ -19,9 +19,6 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
 
-        if 'dob' not in extra_fields:
-            extra_fields['dob'] = date.today() 
-
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
@@ -72,8 +69,6 @@ class Actor(models.Model):
     def __str__(self):
         return self.name
     
-
-    
 class Movie(models.Model):
     id = models.IntegerField(primary_key=True)
     adult = models.BooleanField(blank=True, null=True, default=False)
@@ -116,7 +111,6 @@ class MovieActorMap(models.Model):
     
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
-    dob = models.DateField(null=False, blank=False)
 
     objects = CustomUserManager()
 
