@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
@@ -17,9 +18,6 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-
-        if 'dob' not in extra_fields:
-            extra_fields['dob'] = date.today() 
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -71,8 +69,6 @@ class Actor(models.Model):
     def __str__(self):
         return self.name
     
-
-    
 class Movie(models.Model):
     id = models.IntegerField(primary_key=True)
     adult = models.BooleanField(blank=True, null=True, default=False)
@@ -115,7 +111,6 @@ class MovieActorMap(models.Model):
     
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
-    dob = models.DateField(null=False, blank=False)
 
     objects = CustomUserManager()
 
@@ -126,6 +121,7 @@ class CustomUser(AbstractUser):
 class WishList(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f'{self.user.username}_{self.movie.title}'

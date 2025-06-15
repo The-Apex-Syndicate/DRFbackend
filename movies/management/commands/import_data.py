@@ -15,11 +15,11 @@ def dump_movie_data():
         production_companies_mapping = {}
         production_countries_mapping = {}
         spoken_languages_mapping = {}
-        movies_df = movies_df
-        genres_df = genres_df
-        production_companies_df = production_companies_df
-        production_countries_df = production_countries_df
-        spoken_languages_df = spoken_languages_df
+        movies_df = movies_df.head(50)
+        genres_df = genres_df.head(50)
+        production_companies_df = production_companies_df.head(50)
+        production_countries_df = production_countries_df.head(50)
+        spoken_languages_df = spoken_languages_df.head(50)
         for _, row in genres_df.iterrows():
             with transaction.atomic():
                 genre, created = Genre.objects.get_or_create(
@@ -62,7 +62,7 @@ def dump_movie_data():
 
         print("\nCreating movies ")
         
-        for _, row in movies_df.iterrows():
+        for _, row in movies_df.head(50).iterrows():
             with transaction.atomic():
                 try:
                     fields = {
@@ -141,8 +141,8 @@ def dump_cast_data():
         actors_df = pd.read_csv('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/actors.csv') 
 
         actors_mapping = {}  
-        movie_cast_df = movie_cast_df
-        actors_df = actors_df
+        movie_cast_df = movie_cast_df.head(50)
+        actors_df = actors_df.head(50)
         for _, row in actors_df.iterrows():
             with transaction.atomic():
                 actors, created = Actor.objects.get_or_create(
@@ -191,7 +191,7 @@ def dump_cast_data():
 def update_video_url():
     df = pd.read_json('/Users/sathish/Desktop/MyCodes/Hackathon/DataProcessing/processed/trailer.json')
     df.dropna()
-    for _, row in df.iterrows():
+    for _, row in df.head(50).iterrows():
             with transaction.atomic():
                 try: 
                     if isinstance(eval(row['movie_id']), int):
