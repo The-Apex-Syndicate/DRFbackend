@@ -10,11 +10,13 @@ spec:
     - ReadWriteMany
   hostPath:
     path: /mnt/media
+    type: Directory
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: media-pvc
+  namespace: movie-app
 spec:
   accessModes:
     - ReadWriteMany

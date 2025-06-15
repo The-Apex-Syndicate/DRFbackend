@@ -9,4 +9,4 @@ act workflow_dispatch \
 
 "minikube mount "
 
-minikube mount DRFbackend/media:/mnt/media 
+minikube mount /Users/sathish/Desktop/MyCodes/Hackathon/DRFbackend/media:/mnt/media

@@ -39,5 +39,6 @@ spec:
         - name: regcred
       volumes:
         - name: media-volume
-          persistentVolumeClaim:
-            claimName: media-pvc
+          hostPath:
+            path: /mnt/media
+            type: Directory
