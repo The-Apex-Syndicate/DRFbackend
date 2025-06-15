@@ -5,7 +5,7 @@ metadata:
   name: movie-backend
   namespace: movie-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: movie-backend
@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: movie-backend
-          image: k8-movie-backend:latest
-          imagePullPolicy: Never
+          image: sathishselvan/movie-backend:v0.6
           ports:
             - containerPort: 8000
           env:
@@ -31,3 +30,15 @@ spec:
               value: postgres
             - name: DJANGO_SETTINGS_MODULE
               value: moveibackend.settings
+            - name: DJANGO_ENV
+              value: prod
+          volumeMounts:
+            - name: media-volume
+              mountPath: /moveibackend/media
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: media-volume
+          hostPath:
+            path: /mnt/media
+            type: Directory
