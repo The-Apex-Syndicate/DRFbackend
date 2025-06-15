@@ -1,0 +1,12 @@
+"CI CD running with ACT cmd"
+
+act workflow_dispatch \
+  --secret-file .secrets \
+  -W .github/workflows/docker-ci.yml \
+  --input tag=latest
+
+
+
+"minikube mount "
+
+minikube mount /Users/sathish/Desktop/MyCodes/Hackathon/DRFbackend/media:/mnt/media

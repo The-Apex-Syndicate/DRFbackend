@@ -1,0 +1,26 @@
+name: CI - Build and Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker tag to use'
+        required: true
+        default: 'latest'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub with PAT
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        
+      - name: Build Docker image
+        run: docker build  -t ${{ secrets.DOCKER_USERNAME }}/movie-backend:${{ github.event.inputs.tag }} .
+
+      - name: Push to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/movie-backend:${{ github.event.inputs.tag }}
