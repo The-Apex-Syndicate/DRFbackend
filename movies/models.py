@@ -116,7 +116,6 @@ class MovieActorMap(models.Model):
     
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
-    dob = models.DateField(null=False, blank=False)
 
     objects = CustomUserManager()
 
