@@ -68,16 +68,16 @@ def dump_movie_data():
                     fields = {
                         'id': int(row['id']),
                         'adult': row['adult'],
-                        'original_language': row['original_language'],
-                        'original_title': row['original_title'],
-                        'overview': row['overview'],
+                        'original_language': row['original_language'] if row['original_language']!='' else '',
+                        'original_title': row['original_title'] if row['original_title']!='' else '',
+                        'overview': row['overview'] if row['overview']!='' else '',
                         'popularity': row['popularity'],
-                        'poster_path': row['poster_path'],
+                        'poster_path': row['poster_path'] if row['poster_path']!='' else '',
                         'revenue': row['revenue'],
                         'runtime': row['runtime'],
-                        'status': row['status'],
-                        'tagline': row['tagline'],
-                        'title': row['title'],
+                        'status': row['status']  if row['status']!='' else '',
+                        'tagline': row['tagline'] if row['tagline']!='' else '',
+                        'title': row['title'] if row['title']!='' else '',
                         'video': row['video'],
                         'vote_average': row['vote_average'],
                         'vote_count': row['vote_count'],
@@ -174,8 +174,8 @@ def dump_cast_data():
                             actor = actor_instance,
                             movie = movie_instance,
                             defaults={
-                                    'character_name': row['character_name'],
-                                    'profile_path' : row['profile_path']
+                                    'character_name': row['character_name'] if row['character_name']!='' else '',
+                                    'profile_path' : row['profile_path'] if row['profile_path']!='' else ''
                                     }
                         )
                         if created:
