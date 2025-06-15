@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
@@ -126,6 +127,7 @@ class CustomUser(AbstractUser):
 class WishList(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f'{self.user.username}_{self.movie.title}'
