@@ -187,9 +187,29 @@ def dump_cast_data():
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
+
+def update_video_url():
+    df = pd.read_json('/Users/bharath/Documents/Hack/Hackathon/processed/trailer.json')
+    df.dropna()
+    for _, row in df.iterrows():
+            with transaction.atomic():
+                try: 
+                    if isinstance(eval(row['movie_id']), int):
+                        movie_instance = None
+                        try:
+                            movie_instance = Movie.objects.get(id=row['movie_id'])
+                        except Movie.DoesNotExist:
+                            print("movie doesn't exists")
+                        if movie_instance:
+                            movie_instance.video_url = row.get('trailer_url', '')
+                            movie_instance.save()
+                            print(f"Updated Movie: {movie_instance.title} {movie_instance.id}")   
+                except:
+                    print(row['movie_id'])     
 class Command(BaseCommand):
     help = 'Import movies and genres from CSV files'
 
     def handle(self, *args, **kwargs):
-        dump_movie_data()
-        dump_cast_data()
+        # dump_movie_data()
+        # dump_cast_data()
+        update_video_url()

@@ -79,7 +79,7 @@ class MovieListSerializer(serializers.ModelSerializer):
         fields = ['id', 'adult', 'genres','original_language', 'original_title', 
                   'overview', 'popularity', 'poster_path', 'production_companies', 'production_countries',
                   'release_date', 'revenue', 'runtime', 'spoken_languages', 'status', 'tagline',
-                  'title', 'video','vote_average','vote_count','rating', 'original_language_converted']
+                  'title', 'video','vote_average','vote_count','rating', 'original_language_converted', 'video_url']
 
     def get_original_language_converted(self, obj):
         if not hasattr(self, '_lang_map'):
@@ -97,7 +97,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'adult', 'genres','original_language', 'original_title', 
                   'overview', 'popularity', 'poster_path', 'production_companies', 'production_countries',
                   'release_date', 'revenue', 'runtime', 'spoken_languages', 'status', 'tagline',
-                  'title', 'video','vote_average','vote_count','rating', 'cast']
+                  'title', 'video','vote_average','vote_count','rating', 'cast', 'video_url']
 
 
 class WishListSerializer(serializers.ModelSerializer):

@@ -95,6 +95,7 @@ class Movie(models.Model):
     vote_average = models.FloatField(blank=True, null=True)
     vote_count = models.FloatField(blank=True, null=True)
     rating = models.FloatField(blank=True, null=True)
+    video_url = models.TextField(blank=True, null=True, default="", max_length=500)
 
     def __str__(self):
         return self.title
