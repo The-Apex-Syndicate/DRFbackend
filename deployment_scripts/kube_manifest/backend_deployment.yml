@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
         - name: movie-backend
-          image: sathishselvan/movie-backend:v0.6
+          image: sathishselvan/movie-backend:v0.8
           ports:
             - containerPort: 8000
           env:
             - name: DB_HOST
               value: host.docker.internal
             - name: DB_NAME
-              value: postgres
+              value: movie_db
             - name: DB_USER
               value: sathish
             - name: DB_PASSWORD
