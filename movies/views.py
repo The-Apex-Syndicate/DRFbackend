@@ -88,11 +88,11 @@ class RandomMovieView(APIView):
 
 class WishListViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    queryset = WishList.objects.all().select_related('movie', 'user')
+    queryset = WishList.objects.all().select_related('movie', 'user').order_by('-created_at')
     serializer_class = WishListSerializer
     
     def get_queryset(self):
-        return WishList.objects.filter(user=self.request.user).select_related('movie', 'user')
+        return WishList.objects.filter(user=self.request.user).select_related('movie', 'user').order_by('-created_at')
 
     def destroy(self, request, *args, **kwargs):
         try:
