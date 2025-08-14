@@ -106,15 +106,6 @@ WSGI_APPLICATION = 'moveibackend.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 
 # DATABASES = {
 #     'default': {
@@ -129,29 +120,15 @@ WSGI_APPLICATION = 'moveibackend.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'movie_db',
-        'USER': 'sathish',
-        'PASSWORD': 'postgres',
-        'HOST': 'host.docker.internal',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": config("SQL_ENGINE"),
+        "NAME": config("SQL_DATABASE"),
+        "USER": config("SQL_USER"),
+        "PASSWORD": config("SQL_PASSWORD"),
+        "HOST": config("SQL_HOST"),
+        "PORT": config("SQL_PORT"),
     }
 }
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": config("SQL_ENGINE"),
-#         "NAME": config("SQL_DATABASE"),
-#         "USER": config("SQL_USER"),
-#         "PASSWORD": config("SQL_PASSWORD"),
-#         "HOST": config("SQL_HOST"),
-#         "PORT": config("SQL_PORT"),
-#     }
-# }
-
-
 
 
 # Password validation
