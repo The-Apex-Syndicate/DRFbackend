@@ -33,7 +33,6 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
-    'http://192.168.0.50:3000',
     'http://movie.app.local'
 )
 
